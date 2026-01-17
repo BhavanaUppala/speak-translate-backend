@@ -5,54 +5,49 @@ import com.google.cloud.speech.v1.*;
 import com.google.protobuf.ByteString;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 @Service
 public class SpeechToTextService {
 
-    public SpeechToTextResponse convert(MultipartFile audioFile) {
-
+    public SpeechToTextResponse convert(MultipartFile audio, String sourceLang) {
         try (SpeechClient speechClient = SpeechClient.create()) {
 
-            ByteString audioBytes =
-                    ByteString.copyFrom(audioFile.getBytes());
+            ByteString audioBytes = ByteString.copyFrom(audio.getBytes());
 
-            RecognitionConfig config = RecognitionConfig.newBuilder()
-                    .setEncoding(RecognitionConfig.AudioEncoding.WEBM_OPUS)
-                    .setEnableAutomaticPunctuation(true)
-                    .setLanguageCode("en-IN")
-                    .addAlternativeLanguageCodes("hi-IN")
-                    .addAlternativeLanguageCodes("te-IN")
-                    .build();
+            RecognitionConfig.Builder configBuilder =
+                    RecognitionConfig.newBuilder()
+                            .setEncoding(RecognitionConfig.AudioEncoding.WEBM_OPUS)
+                            .setSampleRateHertz(48000);
 
-            RecognitionAudio audio = RecognitionAudio.newBuilder()
-                    .setContent(audioBytes)
-                    .build();
+            // 🔥 AUTO-DETECT OR MANUAL
+            if (!"auto".equals(sourceLang)) {
+                configBuilder.setLanguageCode(sourceLang);
+            }
+
+            RecognitionConfig config = configBuilder.build();
+
+            RecognitionAudio recognitionAudio =
+                    RecognitionAudio.newBuilder()
+                            .setContent(audioBytes)
+                            .build();
 
             RecognizeResponse response =
-                    speechClient.recognize(config, audio);
+                    speechClient.recognize(config, recognitionAudio);
 
-            if (response.getResultsList().isEmpty()) {
-                throw new RuntimeException("No speech detected. Please speak clearly.");
+            String recognizedText = "";
+
+            if (!response.getResultsList().isEmpty()) {
+                SpeechRecognitionResult result = response.getResultsList().get(0);
+                if (!result.getAlternativesList().isEmpty()) {
+                    recognizedText = result.getAlternativesList().get(0).getTranscript();
+                }
             }
 
-            SpeechRecognitionResult result = response.getResultsList().get(0);
-
-            if (result.getAlternativesList().isEmpty()) {
-                throw new RuntimeException("Speech could not be recognized.");
-            }
-
-            SpeechRecognitionAlternative alternative =
-                    result.getAlternativesList().get(0);
-
-
-            SpeechToTextResponse dto = new SpeechToTextResponse();
-            dto.setText(alternative.getTranscript());
-            dto.setDetectedLanguage("auto");
-            dto.setConfidence(alternative.getConfidence());
-
-            return dto;
+            return new SpeechToTextResponse(recognizedText);
 
         } catch (Exception e) {
-            throw new RuntimeException("Speech-to-Text failed", e);
+            e.printStackTrace();
+            return new SpeechToTextResponse("");
         }
     }
 }

@@ -3,33 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Voice Translator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>🎤 Voice Translator</h2>
+<div class="app">
+    <h1>🎤 Voice Translator</h1>
+    <p class="subtitle">Speak in one language. Hear it in another.</p>
 
-<textarea id="inputText" placeholder="Speak or type text here"></textarea>
-<br><br>
+    <div class="lang-box">
+        <div>
+            <label>I Speak</label>
+            <select id="sourceLang">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="te">Telugu</option>
+                <option value="ta">Tamil</option>
+                <option value="kn">Kannada</option>
+                <option value="ml">Malayalam</option>
+            </select>
+        </div>
 
-<select id="targetLang">
-    <option value="hi">Hindi</option>
-    <option value="te">Telugu</option>
-    <option value="ta">Tamil</option>
-    <option value="fr">French</option>
-</select>
+        <div>
+            <label>I Want</label>
+            <select id="targetLang">
+                <option value="hi">Hindi</option>
+                <option value="en">English</option>
+                <option value="te">Telugu</option>
+                <option value="ta">Tamil</option>
+                <option value="kn">Kannada</option>
+                <option value="ml">Malayalam</option>
+            </select>
+        </div>
+    </div>
 
-<br><br>
+    <div class="text-box">
+        <textarea id="inputText" placeholder="Speak or type here..."></textarea>
+        <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
+    </div>
 
-<button onclick="translateText()">Translate</button>
-
-<h3>Translated Text</h3>
-<textarea id="outputText" readonly></textarea>
-
-<br><br>
-
-<button onclick="speakText()">🔊 Speak</button>
+    <div class="buttons">
+        <button class="mic" onclick="recordSpeech()">🎙 Speak</button>
+        <button class="translate" onclick="translateText()">🌍 Translate</button>
+        <button class="speak" onclick="speakText()">🔊 Speak Output</button>
+    </div>
+</div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

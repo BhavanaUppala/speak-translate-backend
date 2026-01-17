@@ -10,20 +10,17 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "*")
 public class SpeechToTextController {
 
-    private final SpeechToTextService speechToTextService;
+    private final SpeechToTextService service;
 
-    public SpeechToTextController(SpeechToTextService speechToTextService) {
-        this.speechToTextService = speechToTextService;
+    public SpeechToTextController(SpeechToTextService service) {
+        this.service = service;
     }
 
-    @PostMapping(
-            value = "/speech-to-text",
-            consumes = "multipart/form-data"
-    )
+    @PostMapping("/speech-to-text")
     public SpeechToTextResponse speechToText(
-            @RequestParam("audio") MultipartFile audioFile) {
+            @RequestPart("audio") MultipartFile audio,
+            @RequestParam String sourceLang) {
 
-        // ✅ Call REAL Google Speech logic
-        return speechToTextService.convert(audioFile);
+        return service.convert(audio, sourceLang);
     }
 }
