@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Translator</title>
+</head>
+<body>
+
+<h2>🎤 Voice Translator</h2>
+
+<textarea id="inputText" placeholder="Speak or type text here"></textarea>
+<br><br>
+
+<select id="targetLang">
+    <option value="hi">Hindi</option>
+    <option value="te">Telugu</option>
+    <option value="ta">Tamil</option>
+    <option value="fr">French</option>
+</select>
+
+<br><br>
+
+<button onclick="translateText()">Translate</button>
+
+<h3>Translated Text</h3>
+<textarea id="outputText" readonly></textarea>
+
+<br><br>
+
+<button onclick="speakText()">🔊 Speak</button>
+
+<script src="script.js"></script>
+
+</body>
+</html>

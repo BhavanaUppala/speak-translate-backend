@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class SpeechToTextController {
 
     private final SpeechToTextService speechToTextService;
