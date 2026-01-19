@@ -1,5 +1,7 @@
 //const BASE_URL = "http://localhost:8080/api";
-const BASE_URL ="https://speak-translate-backend-production.up.railway.app/api"
+//const BASE_URL ="https://speak-translate-backend-production.up.railway.app/api"
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 /* =========================
    SPEECH → TEXT
    ========================= */
